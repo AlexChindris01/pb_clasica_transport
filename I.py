@@ -11,7 +11,7 @@ with localsolver.LocalSolver() as ls:
         print(input[i][1])
     f.close()
     # mai verific daca e ok
-    # parca sunt ceva spatii ramase si in afara parantezelor
+    # parca sunt ceva spatii ramase si in afara parantezelor; idee: split(" = ")
     d = 2
     r = 3
     SC = [80, 57]
