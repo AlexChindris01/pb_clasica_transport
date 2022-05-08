@@ -2,6 +2,16 @@ import localsolver
 
 with localsolver.LocalSolver() as ls:
     model = ls.model
+    f = open("Lab01_simple_medium_01.dat", "r")
+    input = f.read()
+    input = input.split(";")
+    for i in range(len(input)):
+        input[i] = input[i].split("=")
+    for i in range(1, len(input) - 1):
+        print(input[i][1])
+    f.close()
+    # mai verific daca e ok
+    # parca sunt ceva spatii ramase si in afara parantezelor
     d = 2
     r = 3
     SC = [80, 57]
