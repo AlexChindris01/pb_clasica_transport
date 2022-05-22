@@ -72,4 +72,3 @@ if __name__ == "__main__":
     if os.path.exists("results.xls"):
         os.remove("results.xls")
     wb.save('results.xls')
-
