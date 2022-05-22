@@ -2,6 +2,7 @@ from ortools.sat.python import cp_model
 import ast
 import time
 from os import listdir
+import os
 import xlwt
 from xlwt import Workbook
 
@@ -41,23 +42,34 @@ if __name__ == "__main__":
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = 10.0
 
-        status = solver.Solve(model)  # only need status variable for seeing if the status is optimal, feasible etc
+        status = solver.Solve(model)
         sheet.write(current_row, 0, instance_name)
         t2 = time.time()
         sheet.write(current_row, 2, float(format(t2 - t1, ".3f")))
-        print(format(t2 - t1, ".3f"))
+        g = open("results/" + instance_name + ".txt", "w")
         if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
-            # for i in range(d):  # print solution
-            #     for j in range(r):
-            #         print(solver.Value(X[i][j]), end=" ")
-            #         if solver.Value(X[i][j]) < 10:
-            #             print(" ", end="")
-            #     print()
             sheet.write(current_row, 1, solver.Value(transport_cost))
-            print(solver.Value(transport_cost))
             sheet.write(current_row, 3, "Solved")
+            g.write("Xjk=    [")
+            for i in range(d):
+                g.write("[")
+                for j in range(r):
+                    g.write(str(solver.Value(X[i][j])))
+                    if j < r - 1:
+                        g.write(" ")
+                g.write("]")
+                if i < d - 1:
+                    g.write("\n\t\t")
+            g.write("]\n")
         else:
             sheet.write(current_row, 3, "Not solved")
         current_row += 1
+        g.write("Dk=\t\t\t\t" + instance[4][1].replace(",", "") + "\n")
+        if status == cp_model.OPTIMAL:
+            g.write("Optim\t\t= " + str(solver.Value(transport_cost)) + "\n")
+        g.write("Cost\tD2R = " + str(solver.Value(transport_cost)) + "\n")
+        g.close()
+    if os.path.exists("results.xls"):
+        os.remove("results.xls")
     wb.save('results.xls')
 
